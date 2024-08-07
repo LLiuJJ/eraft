@@ -412,6 +412,31 @@ EStatus RocksDBStorageImpl::IngestSST(std::string sst_file_path) {
   return EStatus::kOk;
 }
 
+EStatus RocksDBStorageImpl::ProductSST(std::string snap_base_path,
+                                       std::string sst_file_path) {
+  RocksDBStorageImpl* snapshot_db =
+      new RocksDBStorageImpl(snap_base_path + "/check");
+  auto kvs = snapshot_db->PrefixScan("", 0, SNAPSHOTING_KEY_SCAN_PRE_COOUNT);
+  DirectoryTool::MkDir(snap_base_path + sst_file_path);
+  uint64_t count = 1;
+  while (kvs.size() != 0) {
+    SPDLOG_INFO("scan find {} keys", kvs.size());
+    rocksdb::Options       options;
+    rocksdb::SstFileWriter sst_file_writer(rocksdb::EnvOptions(), options);
+    sst_file_writer.Open(sst_file_path + std::to_string(count) + ".sst");
+    for (auto kv : kvs) {
+      SPDLOG_INFO("key {} -> val {}", kv.first, kv.second);
+      sst_file_writer.Put(kv.first, kv.second);
+    }
+    sst_file_writer.Finish();
+    kvs = snapshot_db->PrefixScan("",
+                                  count * SNAPSHOTING_KEY_SCAN_PRE_COOUNT,
+                                  SNAPSHOTING_KEY_SCAN_PRE_COOUNT);
+    count += 1;
+  }
+  return EStatus::kOk;
+}
+
 /**
  * @brief
  *

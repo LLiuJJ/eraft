@@ -17,5 +17,3 @@ data
 data/
 gflags
 gflags/
-prometheus-cpp/
-prometheus-cpp

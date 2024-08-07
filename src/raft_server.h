@@ -41,9 +41,18 @@
 #include "raft_config.h"
 #include "raft_node.h"
 
-
+/**
+ * @brief role in raft algorithm
+ *
+ */
 enum NodeRaftRoleEnum { None, Follower, PreCandidate, Candidate, Leader };
 
+/**
+ * @brief NodeRaftRoleEnum to string
+ *
+ * @param role
+ * @return std::string
+ */
 static std::string NodeRoleToStr(NodeRaftRoleEnum role) {
   switch (role) {
     case NodeRaftRoleEnum::None: {
@@ -94,6 +103,11 @@ class RaftServer {
    */
   EStatus RunCycle();
 
+
+  /**
+   * @brief apply main loop
+   *
+   */
   void RunApply();
 
   /**
@@ -382,6 +396,12 @@ class RaftServer {
    */
   LogStore* log_store_;
 
+  /**
+   * @brief
+   *
+   */
+  std::string snap_db_path_;
+
  private:
   /**
    * @brief
@@ -502,12 +522,6 @@ class RaftServer {
    * @brief
    *
    */
-  std::string snap_db_path_;
-
-  /**
-   * @brief
-   *
-   */
   int64_t max_entries_per_append_req_;
 
   /**
@@ -533,8 +547,6 @@ class RaftServer {
    *
    */
   bool is_snapshoting_;
-
-  std::mutex raft_op_mutex_;
 
   /**
    * @brief

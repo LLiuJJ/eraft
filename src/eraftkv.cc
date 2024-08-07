@@ -32,9 +32,6 @@
  */
 
 #include <gflags/gflags.h>
-#include <prometheus/counter.h>
-#include <prometheus/exposer.h>
-#include <prometheus/registry.h>
 #include <rocksdb/db.h>
 #include <spdlog/common.h>
 #include <spdlog/sinks/daily_file_sink.h>
@@ -103,14 +100,6 @@ int main(int argc, char* argv[]) {
   SPDLOG_INFO("eraftkv server start with peer_addrs " + options_.peer_addrs +
               " kv_db_path " + options_.kv_db_path);
 
-  prometheus::Exposer exposer(options_.monitor_addrs);
-  auto                registry = std::make_shared<prometheus::Registry>();
-  exposer.RegisterCollectable(registry);
-  //   auto& put_counter = prometheus::BuildCounter()
-  //                         .Name("eraftkv_put_total")
-  //                         .Help("Number of put request")
-  //                         .Register(*registry);
-  //   put_counter.Add({{"method", "put"}}).Increment();
   server.BuildAndRunRpcServer();
   return 0;
 }

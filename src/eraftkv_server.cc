@@ -271,14 +271,14 @@ grpc::Status ERaftKvServer::PutSSTFile(
     eraftkv::SSTFileId*                          fileId) {
   eraftkv::SSTFileContent sst_file;
   SequentialFileWriter    writer;
-  DirectoryTool::MkDir("/eraft/data/sst_recv/");
+  DirectoryTool::MkDir(raft_context_->snap_db_path_ + "/sst_recv/");
   uint64_t sec = std::chrono::duration_cast<std::chrono::milliseconds>(
                      std::chrono::system_clock::now().time_since_epoch())
                      .count();
   SPDLOG_INFO(
       "recv sst filename {} id {} sec {}", sst_file.name(), sst_file.id(), sec);
-  writer.OpenIfNecessary("/eraft/data/sst_recv/" + std::to_string(sec) +
-                         ".sst");
+  writer.OpenIfNecessary(raft_context_->snap_db_path_ + "/sst_recv/" +
+                         std::to_string(sec) + ".sst");
   while (reader->Read(&sst_file)) {
     try {
       auto* const data = sst_file.mutable_content();
@@ -288,11 +288,6 @@ grpc::Status ERaftKvServer::PutSSTFile(
     }
   }
   return grpc::Status::OK;
-}
-
-
-EStatus ERaftKvServer::TakeSnapshot(int64_t log_idx) {
-  return raft_context_->SnapshotingStart(log_idx);
 }
 
 /**

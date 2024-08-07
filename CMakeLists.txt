@@ -135,16 +135,6 @@ find_package(benchmark REQUIRED)
 # google benchmark end
 ################################################
 
-################################################
-# prometheus-cpp begin
-#
-
-find_package(prometheus-cpp CONFIG REQUIRED)
-
-#
-# prometheus-cpp end
-################################################
-
 # build eraftkv
 set(eraftkv_sources)
 list(APPEND eraftkv_sources src/eraftkv_server.cc)
@@ -170,7 +160,6 @@ target_link_libraries(eraftkv PUBLIC
     ${Protobuf_LIBRARY}
     stdc++fs
     gflags
-    prometheus-cpp::pull
 )
 target_include_directories(eraftkv PUBLIC ${eraftkv_INCLUDE_DIR})
 
@@ -196,7 +185,6 @@ target_link_libraries(eraftmeta PUBLIC
     ${Protobuf_LIBRARY}
     stdc++fs
     gflags
-    prometheus-cpp::pull
 )
 target_include_directories(eraftmeta PUBLIC ${eraftkv_INCLUDE_DIR})
 
@@ -222,7 +210,6 @@ target_link_libraries(eraftkv_server_test PUBLIC
     pthread
     gRPC::grpc++
     ${Protobuf_LIBRARY}
-    prometheus-cpp::pull
 )
 
 # build eraftmeta_server_tests
@@ -263,7 +250,6 @@ target_link_libraries(rocksdb_storage_impl_tests PUBLIC
     pthread
     stdc++fs
     rocksdb
-    prometheus-cpp::pull
 )
 
 add_executable(log_entry_cache_tests src/log_entry_cache_tests.cc src/log_entry_cache.cc src/eraftkv.pb.cc)
@@ -304,7 +290,6 @@ target_link_libraries(grpc_network_impl_test PUBLIC
     pthread
     rocksdb
     ${Protobuf_LIBRARY}
-    prometheus-cpp::pull
 )
 
 
@@ -322,5 +307,4 @@ add_executable(eraftkv-ctl
 target_link_libraries(eraftkv-ctl PUBLIC
     gRPC::grpc++
     ${Protobuf_LIBRARY}
-    prometheus-cpp::pull
 )

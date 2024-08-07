@@ -135,6 +135,7 @@ class RocksDBStorageImpl : public Storage {
    */
   EStatus IngestSST(std::string sst_file_path);
 
+  EStatus ProductSST(std::string snap_base_path, std::string sst_file_path);
 
   /**
    * @brief

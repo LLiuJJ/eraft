@@ -69,7 +69,7 @@ RaftServer::RaftServer(RaftConfig raft_config,
     , max_entries_per_append_req_(100)
     , tick_interval_(100)
     , granted_votes_(0)
-    , snap_threshold_log_count_(10000)
+    , snap_threshold_log_count_(500)
     , open_auto_apply_(true)
     , is_snapshoting_(false)
     , snap_db_path_(raft_config.snap_path)
@@ -127,7 +127,6 @@ void RaftServer::RunApply() {
     if (open_auto_apply_) {
       this->ApplyEntries();
     }
-    std::this_thread::sleep_for(std::chrono::microseconds(100));
   }
 }
 
@@ -207,33 +206,13 @@ EStatus RaftServer::SendAppendEntries() {
     if (prev_log_index < this->log_store_->FirstIndex()) {
       auto new_first_log_ent = this->log_store_->GetFirstEty();
 
-      RocksDBStorageImpl* snapshot_db = new RocksDBStorageImpl(snap_db_path_);
-      auto                kvs =
-          snapshot_db->PrefixScan("", 0, SNAPSHOTING_KEY_SCAN_PRE_COOUNT);
-      DirectoryTool::MkDir("/eraft/data/sst_send/");
-      uint64_t count = 1;
-      while (kvs.size() != 0) {
-        SPDLOG_INFO("scan find {} keys", kvs.size());
-        rocksdb::Options       options;
-        rocksdb::SstFileWriter sst_file_writer(rocksdb::EnvOptions(), options);
-        sst_file_writer.Open("/eraft/data/sst_send/" + std::to_string(count) +
-                             ".sst");
-        for (auto kv : kvs) {
-          SPDLOG_INFO("key {} -> val {}", kv.first, kv.second);
-          sst_file_writer.Put(kv.first, kv.second);
-        }
-        sst_file_writer.Finish();
-        kvs = snapshot_db->PrefixScan("",
-                                      count * SNAPSHOTING_KEY_SCAN_PRE_COOUNT,
-                                      SNAPSHOTING_KEY_SCAN_PRE_COOUNT);
-        count += 1;
-      }
-
+      this->store_->ProductSST(snap_db_path_, "/sst_send/");
 
       //
       // loop send sst files
       //
-      auto snap_files = DirectoryTool::ListDirFiles("/eraft/data/sst_send/");
+      auto snap_files =
+          DirectoryTool::ListDirFiles(snap_db_path_ + "/sst_send/");
       for (auto snapfile : snap_files) {
         if (StringUtil::endsWith(snapfile, ".sst")) {
           SPDLOG_INFO("snapfile {}", snapfile);
@@ -246,7 +225,6 @@ EStatus RaftServer::SendAppendEntries() {
       snap_req->set_leader_id(this->id_);
       snap_req->set_last_included_index(new_first_log_ent->id());
       snap_req->set_last_included_term(new_first_log_ent->term());
-      // snap_req->set_data("snapshotdata");
 
       SPDLOG_INFO("send snapshot to node {} with req {}",
                   node->id,
@@ -646,7 +624,7 @@ EStatus RaftServer::HandleSnapshotReq(RaftNode*                   from_node,
 
   resp->set_success(true);
 
-  auto snap_files = DirectoryTool::ListDirFiles("/eraft/data/sst_recv/");
+  auto snap_files = DirectoryTool::ListDirFiles(snap_db_path_ + "/sst_recv/");
   for (auto snapfile : snap_files) {
     this->store_->IngestSST(snapfile);
   }
@@ -941,7 +919,7 @@ EStatus RaftServer::SnapshotingStart(int64_t ety_idx) {
   // reset first log index
   this->log_store_->ResetFirstLogEntry(this->current_term_, ety_idx);
 
-  this->store_->CreateCheckpoint(snap_db_path_);
+  this->store_->CreateCheckpoint(snap_db_path_ + "/check");
 
   this->is_snapshoting_ = false;
 

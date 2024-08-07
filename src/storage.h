@@ -150,6 +150,16 @@ class Storage {
   /**
    * @brief
    *
+   * @param snap_base_path
+   * @param sst_file_path
+   * @return EStatus
+   */
+  virtual EStatus ProductSST(std::string snap_base_path,
+                             std::string sst_file_path) = 0;
+
+  /**
+   * @brief
+   *
    * @param key
    * @return EStatus
    */

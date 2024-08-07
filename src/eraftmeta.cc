@@ -10,9 +10,6 @@
  */
 
 #include <gflags/gflags.h>
-#include <prometheus/counter.h>
-#include <prometheus/exposer.h>
-#include <prometheus/registry.h>
 
 #include "eraftkv_server.h"
 #include "raft_server.h"
@@ -45,11 +42,6 @@ int main(int argc, char* argv[]) {
   options_.monitor_addrs = FLAGS_monitor_addrs;
 
   ERaftKvServer server(options_);
-
-  prometheus::Exposer exposer(options_.monitor_addrs);
-  auto                registry = std::make_shared<prometheus::Registry>();
-  exposer.RegisterCollectable(registry);
-  server.regis = registry;
 
   server.BuildAndRunRpcServer();
   return 0;

@@ -34,9 +34,6 @@
 #pragma once
 
 #include <grpcpp/grpcpp.h>
-#include <prometheus/counter.h>
-#include <prometheus/exposer.h>
-#include <prometheus/registry.h>
 
 #include <condition_variable>
 #include <cstdint>
@@ -107,6 +104,9 @@ class ERaftKvServer : public eraftkv::ERaftKv::Service {
       raft_config.peer_address_map[count] = peer;
       count++;
     }
+    if (options_.svr_role == ServerRoleEnum::DataServer) {
+      DirectoryTool::MkDir(options_.snap_db_path);
+    }
     raft_config.snap_path = options_.snap_db_path;
     options_.svr_addr = raft_config.peer_address_map[options_.svr_id];
     GRpcNetworkImpl* net_rpc = new GRpcNetworkImpl();
@@ -116,8 +116,6 @@ class ERaftKvServer : public eraftkv::ERaftKv::Service {
     RocksDBStorageImpl* kv_db = new RocksDBStorageImpl(options_.kv_db_path);
     raft_context_ =
         RaftServer::RunMainLoop(raft_config, log_db, kv_db, net_rpc);
-
-    // put_counter = new prometheus::Family<prometheus::Counter>(std::move(ct));
   }
 
   ERaftKvServer() {}
@@ -189,26 +187,14 @@ class ERaftKvServer : public eraftkv::ERaftKv::Service {
   /**
    * @brief
    *
-   * @param log_idx
-   * @return EStatus
-   */
-  EStatus TakeSnapshot(int64_t log_idx);
-
-  /**
-   * @brief
-   *
    */
   ERaftKvServerOptions options_;
-
-  std::shared_ptr<prometheus::Registry> regis;
 
   static std::map<int, std::condition_variable*> ready_cond_vars_;
 
   static std::mutex ready_mutex_;
 
   static bool is_ok_;
-
-  prometheus::Family<prometheus::Counter>* put_counter;
 
  private:
   /**
