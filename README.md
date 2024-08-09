@@ -79,7 +79,6 @@ To compile eraftkv, you will need:
 
 To build:
 ```
-make gen-protocol-code
 make build-dev
 ```
 
