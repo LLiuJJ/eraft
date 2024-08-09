@@ -1,0 +1,7 @@
+#!/bin/bash
+
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+SRCPATH=$(cd $SCRIPTPATH/..; pwd -P)
+
+clang-format -style=file --sort-includes -i ${SRCPATH}/raftcore/src/raft_server.cc
+clang-format -style=file --sort-includes -i ${SRCPATH}/raftcore/src/util.cc
