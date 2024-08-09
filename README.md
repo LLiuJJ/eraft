@@ -1,10 +1,8 @@
-## ERaftKV
+## ERaft
 
-> :warning: ERaftKV is still being developed, you can find a golang version for ebooks - [Distributed Data Services](https://3.cn/1W-jAWMR) at branch [eraftbook](https://github.com/eraft-io/eraft/tree/eraftbook) 
+> :warning: ERaft is still being developed, you can find a golang version for ebooks - [Distributed Data Services](https://3.cn/1W-jAWMR) at branch [eraftbook](https://github.com/eraft-io/eraft/tree/eraftbook) 
 
-ERaftKV is a persistent distributed KV storage system, uses the Raft protocol to ensure data consistency, At the same time, it supports sharding for large-scale data storage.
-
-## ERaftKV Features
+## ERaft Features
 - Strong and consistent data storage ensures secure and reliable data persistence in distributed systems.
 - Support KV data type operations, including PUT, GET, DEL, and SCAN operations on keys. When users operate on cluster data, they must ensure the persistence of the operation and the sequential consistency of reading and writing.
 - Dynamically configure the cluster, including adding and deleting nodes, adding and deleting cluster sharding configurations, including which keyrange the cluster sharding is responsible for.
@@ -64,32 +62,6 @@ sudo make run-demo-test
 ```
 sudo make stop-demo
 sudo make rm-net
-```
-
-## Building and run test using [GitHub Actions](https://github.com/features/actions)
-
-All you need to do is submit a Pull Request to our repository, and all compile, build, and testing will be automatically executed.
-
-You can check the [ERatfKVGitHubActions](https://github.com/eraft-io/eraft/actions) See the execution process of code build tests.
-
-## Building on your local machine.
-
-To compile eraftkv, you will need:
-- Docker
-
-To build:
-```
-make build-dev
-```
-
-Run test:
-```
-make tests
-```
-
-If you want to build image youtself
-```
-make image
 ```
 
 # Contributing
