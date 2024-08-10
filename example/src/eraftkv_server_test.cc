@@ -40,9 +40,9 @@
 
 #include <iostream>
 
-#include "eraft/eraftkv.pb.h"
 #include "eraft/util.h"
-#include "eraftkv.grpc.pb.h"
+#include "protocol/eraftkv.grpc.pb.h"
+#include "protocol/eraftkv.pb.h"
 
 int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);

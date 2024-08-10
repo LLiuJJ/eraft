@@ -32,8 +32,8 @@
  */
 #include <gtest/gtest.h>
 
-#include "eraft/eraftkv.pb.h"
 #include "log_entry_cache.h"
+#include "protocol/eraftkv.pb.h"
 
 TEST(LogEntryCacheTest, Init) {
   LogEntryCache* log_cache = new LogEntryCache();

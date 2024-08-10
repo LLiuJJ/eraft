@@ -40,12 +40,12 @@
 #include <memory>
 #include <string>
 
-#include "eraft/eraftkv.pb.h"
 #include "eraft/estatus.h"
 #include "eraft/raft_server.h"
 #include "eraft/util.h"
-#include "eraftkv.grpc.pb.h"
 #include "grpc_network_impl.h"
+#include "protocol/eraftkv.grpc.pb.h"
+#include "protocol/eraftkv.pb.h"
 #include "rocksdb_storage_impl.h"
 
 using eraftkv::ERaftKv;

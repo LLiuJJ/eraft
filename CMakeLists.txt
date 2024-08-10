@@ -135,5 +135,6 @@ find_package(benchmark REQUIRED)
 # google benchmark end
 ################################################
 
+add_subdirectory(protocol)
 add_subdirectory(raftcore)
 add_subdirectory(example)

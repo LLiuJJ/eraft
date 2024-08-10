@@ -5,7 +5,6 @@ set(eraftkv_sources)
 list(APPEND eraftkv_sources src/eraftkv_server.cc)
 list(APPEND eraftkv_sources src/rocksdb_storage_impl.cc)
 list(APPEND eraftkv_sources src/rocksdb_log_storage_impl.cc)
-list(APPEND eraftkv_sources src/eraftkv.grpc.pb.cc)
 list(APPEND eraftkv_sources src/sequential_file_reader.cc)
 list(APPEND eraftkv_sources src/sequential_file_writer.cc)
 list(APPEND eraftkv_sources src/log_entry_cache.cc)
@@ -29,7 +28,6 @@ set(eraftmeta_sources)
 list(APPEND eraftmeta_sources src/eraftkv_server.cc)
 list(APPEND eraftmeta_sources src/rocksdb_storage_impl.cc)
 list(APPEND eraftmeta_sources src/rocksdb_log_storage_impl.cc)
-list(APPEND eraftmeta_sources src/eraftkv.grpc.pb.cc)
 list(APPEND eraftmeta_sources src/sequential_file_reader.cc)
 list(APPEND eraftmeta_sources src/sequential_file_writer.cc)
 list(APPEND eraftmeta_sources src/log_entry_cache.cc)
@@ -50,7 +48,6 @@ target_include_directories(eraftmeta PUBLIC ${PROJECT_SOURCE_DIR}/include)
 ## eraft-ctl
 add_executable(eraftkv-ctl 
     src/eraftkv_ctl.cc
-    src/eraftkv.grpc.pb.cc
     src/client.cc
     src/sequential_file_reader.cc
     src/sequential_file_writer.cc
@@ -60,5 +57,6 @@ target_link_libraries(eraftkv-ctl PUBLIC
     gRPC::grpc++
     ${Protobuf_LIBRARY}
     eraftcore
+    protocol
 )
 target_include_directories(eraftkv-ctl PUBLIC ${PROJECT_SOURCE_DIR}/include)

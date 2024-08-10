@@ -217,7 +217,7 @@ grpc::Status ERaftKvServer::ClusterConfigChange(
         return grpc::Status::OK;
       }
 
-      int rand_seq = static_cast<int>(RandomNumber::Between(1, 10000));
+      int  rand_seq = static_cast<int>(RandomNumber::Between(1, 10000));
       bool success;
       raft_context_->ProposeConfChange(conf_change_req->SerializeAsString(),
                                        &log_index,

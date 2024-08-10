@@ -36,9 +36,9 @@
 #include <rocksdb/utilities/checkpoint.h>
 #include <spdlog/spdlog.h>
 
-#include "eraft/eraftkv.pb.h"
 #include "eraft/util.h"
 #include "eraftkv_server.h"
+#include "protocol/eraftkv.pb.h"
 
 /**
  * @brief Get the Node Address object

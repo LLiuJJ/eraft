@@ -39,9 +39,9 @@
 #include <cstdint>
 #include <vector>
 
-#include "eraft/eraftkv.pb.h"
 #include "eraft/util.h"
-#include "eraftkv.grpc.pb.h"
+#include "protocol/eraftkv.grpc.pb.h"
+#include "protocol/eraftkv.pb.h"
 
 #define DEFAULT_METASERVER_ADDRS \
   "172.18.0.2:8088,172.18.0.3:8089,172.18.0.4:8090"

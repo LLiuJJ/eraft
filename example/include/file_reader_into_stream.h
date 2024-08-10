@@ -38,8 +38,8 @@
 #include <cstdint>
 #include <string>
 
-#include "eraft/eraftkv.pb.h"
-#include "eraftkv.grpc.pb.h"
+#include "protocol/eraftkv.grpc.pb.h"
+#include "protocol/eraftkv.pb.h"
 #include "sequential_file_reader.h"
 #include "sys/errno.h"
 

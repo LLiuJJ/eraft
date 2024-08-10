@@ -37,10 +37,10 @@
 #include <cstdint>
 #include <iostream>
 
-#include "eraft/eraftkv.pb.h"
 #include "eraft/estatus.h"
 #include "eraft/raft_config.h"
 #include "eraft/raft_node.h"
+#include "protocol/eraftkv.pb.h"
 
 #define SG_META_PREFIX "SG_META"
 

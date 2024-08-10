@@ -41,11 +41,11 @@
 #include <iostream>
 #include <memory>
 
-#include "eraft/eraftkv.pb.h"
 #include "eraft/raft_server.h"
 #include "eraft/util.h"
-#include "eraftkv.grpc.pb.h"
 #include "file_reader_into_stream.h"
+#include "protocol/eraftkv.grpc.pb.h"
+#include "protocol/eraftkv.pb.h"
 #include "sequential_file_reader.h"
 #include "sequential_file_writer.h"
 

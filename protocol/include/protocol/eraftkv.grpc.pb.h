@@ -4,7 +4,7 @@
 #ifndef GRPC_eraftkv_2eproto__INCLUDED
 #define GRPC_eraftkv_2eproto__INCLUDED
 
-#include "eraft/eraftkv.pb.h"
+#include "protocol/eraftkv.pb.h"
 
 #include <functional>
 #include <grpc/impl/codegen/port_platform.h>

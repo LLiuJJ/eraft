@@ -1,6 +1,6 @@
 // MIT License
 
-// Copyright (c) 2023 ERaftGroup
+// Copyright (c) 2024 ERaftGroup
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,16 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-/**
- * @file rocksdb_storage_impl.h
- * @author ERaftGroup
- * @brief
- * @version 0.1
- * @date 2023-03-30
- *
- * @copyright Copyright (c) 2023
- *
- */
 
 #pragma once
 
@@ -37,144 +27,6 @@
 
 #include "eraft/raft_server.h"
 #include "log_entry_cache.h"
-
-/**
- * @brief
- *
- */
-class RocksDBStorageImpl : public Storage {
-
- public:
-  /**
-   * @brief Get the Node Address object
-   *
-   * @param raft
-   * @param id
-   * @return std::string
-   */
-  std::string GetNodeAddress(RaftServer* raft, std::string id);
-
-  /**
-   * @brief
-   *
-   * @param raft
-   * @param id
-   * @param address
-   * @return EStatus
-   */
-  EStatus SaveNodeAddress(RaftServer* raft,
-                          std::string id,
-                          std::string address);
-
-  /**
-   * @brief
-   *
-   * @param raft
-   * @param term
-   * @param vote
-   * @return EStatus
-   */
-  EStatus SaveRaftMeta(RaftServer* raft, int64_t term, int64_t vote);
-
-  /**
-   * @brief
-   *
-   * @param raft
-   * @param term
-   * @param vote
-   * @return EStatus
-   */
-  EStatus ReadRaftMeta(RaftServer* raft, int64_t* term, int64_t* vote);
-
-  /**
-   * @brief
-   *
-   * @param key
-   * @param val
-   * @return EStatus
-   */
-  EStatus PutKV(std::string key, std::string val);
-
-  /**
-   * @brief
-   *
-   * @param key
-   * @return std::string
-   */
-  std::pair<std::string, bool> GetKV(std::string key);
-
-  /**
-   * @brief
-   *
-   * @param prefix
-   * @param offset
-   * @param limit
-   * @return std::map<std::string, std::string>
-   */
-  std::map<std::string, std::string> PrefixScan(std::string prefix,
-                                                int64_t     offset,
-                                                int64_t     limit);
-
-  /**
-   * @brief
-   *
-   * @param sst_file_path
-   * @return EStatus
-   */
-  EStatus IngestSST(std::string sst_file_path);
-
-  /**
-   * @brief
-   *
-   * @param snap_base_path
-   * @param sst_file_path
-   * @return EStatus
-   */
-  EStatus ProductSST(std::string snap_base_path, std::string sst_file_path);
-
-  /**
-   * @brief
-   *
-   * @param key
-   * @return EStatus
-   */
-  EStatus DelKV(std::string key);
-
-  /**
-   * @brief Construct a new RocksDB Storage Impl object
-   *
-   * @param db_path
-   */
-  RocksDBStorageImpl(std::string db_path);
-
-  /**
-   * @brief Destroy the Rocks DB Storage Impl object
-   *
-   */
-  ~RocksDBStorageImpl();
-
-  /**
-   * @brief Create a Checkpoint object
-   *
-   * @param snap_path
-   * @return EStatus
-   */
-  EStatus CreateCheckpoint(std::string snap_path);
-
- private:
-  /**
-   * @brief
-   *
-   */
-  std::string db_path_;
-
-  /**
-   * @brief
-   *
-   */
-  rocksdb::DB* kv_db_;
-};
-
 
 class RocksDBSingleLogStorageImpl : public LogStore {
 

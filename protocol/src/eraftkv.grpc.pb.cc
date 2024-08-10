@@ -2,8 +2,8 @@
 // If you make any local change, they will be lost.
 // source: eraftkv.proto
 
-#include "eraft/eraftkv.pb.h"
-#include "eraftkv.grpc.pb.h"
+#include "protocol/eraftkv.pb.h"
+#include "protocol/eraftkv.grpc.pb.h"
 
 #include <functional>
 #include <grpcpp/impl/codegen/async_stream.h>

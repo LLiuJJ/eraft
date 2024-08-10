@@ -152,23 +152,32 @@ EStatus RaftServer::RunCycle() {
       }
     }
     if (election_tick_count_ >= election_timeout_ && election_running_) {
-      if (this->role_ == NodeRaftRoleEnum::Follower) {
-        SPDLOG_INFO("start pre election in term {} ", current_term_);
-        this->BecomePreCandidate();
-        this->ElectionStart(true);
-      } else if (this->role_ == NodeRaftRoleEnum::PreCandidate) {
-        if (this->granted_votes_ > (this->nodes_.size() / 2)) {
-          this->BecomeCandidate();
-          this->ElectionStart(false);
-        } else {
-          this->BecomeFollower();
+      switch (this->role_) {
+        case NodeRaftRoleEnum::Follower: {
+          SPDLOG_INFO("start pre election in term {} ", current_term_);
+          this->BecomePreCandidate();
+          this->ElectionStart(true);
+          break;
         }
-      } else if (this->role_ == NodeRaftRoleEnum::Candidate) {
-        if (this->granted_votes_ > (this->nodes_.size() / 2)) {
-          this->BecomeLeader();
-        } else {
-          this->BecomeFollower();
+        case NodeRaftRoleEnum::PreCandidate: {
+          if (this->granted_votes_ > (this->nodes_.size() / 2)) {
+            this->BecomeCandidate();
+            this->ElectionStart(false);
+          } else {
+            this->BecomeFollower();
+          }
+          break;
         }
+        case NodeRaftRoleEnum::Candidate: {
+          if (this->granted_votes_ > (this->nodes_.size() / 2)) {
+            this->BecomeLeader();
+          } else {
+            this->BecomeFollower();
+          }
+          break;
+        }
+        default:
+          break;
       }
       ResetRandomElectionTimeout();
     }

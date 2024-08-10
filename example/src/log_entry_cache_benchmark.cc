@@ -33,8 +33,8 @@
 
 #include <benchmark/benchmark.h>
 
-#include "eraft/eraftkv.pb.h"
 #include "log_entry_cache.h"
+#include "protocol/eraftkv.pb.h"
 
 /**
  * @brief

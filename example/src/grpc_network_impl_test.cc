@@ -32,18 +32,19 @@
  */
 
 
+#include "grpc_network_impl.h"
+
 #include <grpcpp/grpcpp.h>
 #include <gtest/gtest.h>
 #include <unistd.h>
 
 #include <iostream>
 
-#include "eraft/eraftkv.pb.h"
 #include "eraft/raft_node.h"
 #include "eraft/raft_server.h"
-#include "eraftkv.grpc.pb.h"
 #include "eraftkv_server.h"
-#include "grpc_network_impl.h"
+#include "protocol/eraftkv.grpc.pb.h"
+#include "protocol/eraftkv.pb.h"
 
 using eraftkv::ERaftKv;
 using grpc::Channel;

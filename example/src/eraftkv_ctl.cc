@@ -38,9 +38,9 @@
 #include <iostream>
 
 #include "client.h"
-#include "eraft/eraftkv.pb.h"
 #include "eraft/util.h"
-#include "eraftkv.grpc.pb.h"
+#include "protocol/eraftkv.grpc.pb.h"
+#include "protocol/eraftkv.pb.h"
 
 using eraftkv::ERaftKv;
 using grpc::Channel;

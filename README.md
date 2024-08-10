@@ -1,4 +1,5 @@
 ## ERaft
+ERaft is a raft algorithm library with rich features, based on the algorithm library, we provided an example implementation of a distributed KV storage system.
 
 > :warning: ERaft is still being developed, you can find a golang version for ebooks - [Distributed Data Services](https://3.cn/1W-jAWMR) at branch [eraftbook](https://github.com/eraft-io/eraft/tree/eraftbook) 
 

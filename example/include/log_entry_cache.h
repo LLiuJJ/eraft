@@ -36,7 +36,7 @@
 
 #include <deque>
 
-#include "eraft/eraftkv.pb.h"
+#include "protocol/eraftkv.pb.h"
 
 
 class LogEntryCache {

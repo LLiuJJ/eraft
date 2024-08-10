@@ -36,8 +36,8 @@
 #include <string>
 #include <vector>
 
-#include "eraft/eraftkv.pb.h"
 #include "eraft/estatus.h"
+#include "protocol/eraftkv.pb.h"
 /**
  * @brief
  *

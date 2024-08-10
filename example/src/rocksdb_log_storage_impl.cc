@@ -31,6 +31,8 @@
  *
  */
 
+#include "rocksdb_log_storage_impl.h"
+
 #include <rocksdb/db.h>
 #include <spdlog/spdlog.h>
 #include <stdint.h>
@@ -38,7 +40,6 @@
 #include <iostream>
 
 #include "eraft/util.h"
-#include "rocksdb_storage_impl.h"
 
 
 /****************************************************************************
