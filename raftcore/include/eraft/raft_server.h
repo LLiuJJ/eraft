@@ -36,6 +36,7 @@
 #include <condition_variable>
 #include <cstdint>
 #include <iostream>
+#include <mutex>
 
 #include "eraft/estatus.h"
 #include "eraft/raft_config.h"
@@ -112,6 +113,12 @@ class RaftServer {
    *
    */
   void RunApply();
+
+  /**
+   * @brief
+   *
+   */
+  void NotifyToApply();
 
   /**
    * @brief
@@ -248,20 +255,6 @@ class RaftServer {
    * @return EStatus
    */
   EStatus ElectionStart(bool is_prevote);
-
-
-  /**
-   * @brief Get the Last Applied Entry object
-   *
-   * @return Entry*
-   */
-  eraftkv::Entry* GetLastAppliedEntry();
-  /**
-   * @brief Get the First Entry Idx object
-   *
-   * @return int64_t
-   */
-  int64_t GetFirstEntryIdx();
 
   /**
    * @brief
@@ -549,6 +542,24 @@ class RaftServer {
    *
    */
   bool is_snapshoting_;
+
+  /**
+   * @brief
+   *
+   */
+  bool ready_to_apply_;
+
+  /**
+   * @brief
+   *
+   */
+  std::mutex apply_ready_mtx_;
+
+  /**
+   * @brief
+   *
+   */
+  std::condition_variable apply_ready_cv_;
 
  private:
   /**

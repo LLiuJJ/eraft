@@ -74,7 +74,8 @@ RaftServer::RaftServer(RaftConfig raft_config,
     , open_auto_apply_(true)
     , is_snapshoting_(false)
     , snap_db_path_(raft_config.snap_path)
-    , election_running_(true) {
+    , election_running_(true)
+    , ready_to_apply_(false) {
   this->log_store_ = log_store;
   this->store_ = store;
   this->net_ = net;
@@ -106,7 +107,7 @@ RaftServer::~RaftServer() {
 }
 
 /**
- * @brief
+ * @brief generate random election timeout for election
  *
  * @return EStatus
  */
@@ -120,7 +121,7 @@ EStatus RaftServer::ResetRandomElectionTimeout() {
 }
 
 /**
- * @brief
+ * @brief run server mainloop
  *
  * @param raft_config
  * @param log_store
@@ -141,14 +142,19 @@ RaftServer* RaftServer::RunMainLoop(RaftConfig raft_config,
 }
 
 /**
- * @brief
+ * @brief run apply
  *
  */
 void RaftServer::RunApply() {
   while (true) {
+    {
+      std::unique_lock<std::mutex> lock(apply_ready_mtx_);
+      apply_ready_cv_.wait(lock, [this] { return this->ready_to_apply_; });
+    }
     if (open_auto_apply_) {
       this->ApplyEntries();
     }
+    this->ready_to_apply_ = false;
   }
 }
 
@@ -466,6 +472,17 @@ EStatus RaftServer::ApplyEntries() {
   }
   return EStatus::kOk;
 }
+
+/**
+ * @brief
+ *
+ */
+void RaftServer::NotifyToApply() {
+  std::lock_guard<std::mutex> lock(this->apply_ready_mtx_);
+  this->ready_to_apply_ = true;
+  this->apply_ready_cv_.notify_one();
+}
+
 
 /**
  * @brief
@@ -882,12 +899,12 @@ EStatus RaftServer::AdvanceCommitIndexForLeader() {
   }
   sort(match_idxs.begin(), match_idxs.end());
   int64_t new_commit_index = match_idxs[match_idxs.size() / 2];
-  if (new_commit_index > this->commit_idx_) {
-    if (this->MatchLog(this->current_term_, new_commit_index)) {
-      this->commit_idx_ = new_commit_index;
-      this->log_store_->PersisLogMetaState(this->commit_idx_,
-                                           this->last_applied_idx_);
-    }
+  if (new_commit_index > this->commit_idx_ &&
+      this->MatchLog(this->current_term_, new_commit_index)) {
+    this->commit_idx_ = new_commit_index;
+    this->log_store_->PersisLogMetaState(this->commit_idx_,
+                                         this->last_applied_idx_);
+    this->NotifyToApply();
   }
   return EStatus::kOk;
 }
@@ -899,13 +916,13 @@ EStatus RaftServer::AdvanceCommitIndexForLeader() {
  * @return EStatus
  */
 EStatus RaftServer::AdvanceCommitIndexForFollower(int64_t leader_commit) {
-
   int64_t new_commit_index =
       std::min(leader_commit, this->log_store_->GetLastEty()->id());
   if (new_commit_index > this->commit_idx_) {
     this->commit_idx_ = new_commit_index;
     this->log_store_->PersisLogMetaState(this->commit_idx_,
                                          this->last_applied_idx_);
+    this->NotifyToApply();
   }
   return EStatus::kOk;
 }
@@ -1137,24 +1154,6 @@ EStatus RaftServer::SnapshotingStart(int64_t ety_idx) {
   this->is_snapshoting_ = false;
 
   return EStatus::kOk;
-}
-
-/**
- * @brief Get the Last Applied Entry object
- *
- * @return Entry*
- */
-eraftkv::Entry* RaftServer::GetLastAppliedEntry() {
-  return nullptr;
-}
-
-/**
- * @brief Get the First Entry Idx object
- *
- * @return int64_t
- */
-int64_t RaftServer::GetFirstEntryIdx() {
-  return 0;
 }
 
 std::vector<RaftNode*> RaftServer::GetNodes() {

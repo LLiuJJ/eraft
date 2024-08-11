@@ -39,11 +39,6 @@ build-dev:
 	chmod +x scripts/build-dev.sh
 	docker run -it --rm -v  $(realpath .):/eraft eraft/eraftkv:$(IMAGE_VERSION) /eraft/scripts/build-dev.sh
 
-# run all unit test
-tests:
-	chmod +x scripts/run-tests.sh
-	docker run -it --rm -v  $(realpath .):/eraft eraft/eraftkv:$(IMAGE_VERSION) /eraft/scripts/run-tests.sh
-
 create-net:
 	docker network create --subnet=172.18.0.0/16 mytestnetwork
 
