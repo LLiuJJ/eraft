@@ -44,13 +44,49 @@
 #include <vector>
 
 namespace fs = std::filesystem;
+
+/**
+ * @brief
+ *
+ */
 class DirectoryTool {
  public:
-  static bool                     IsDir(const std::string dirpath);
-  static bool                     MkDir(const std::string dirpath);
-  static int                      StaticDirSize(const std::string dirpath);
+  /**
+   * @brief
+   *
+   * @param dirpath
+   * @return true
+   * @return false
+   */
+  static bool IsDir(const std::string dirpath);
+  /**
+   * @brief
+   *
+   * @param dirpath
+   * @return true
+   * @return false
+   */
+  static bool MkDir(const std::string dirpath);
+  /**
+   * @brief
+   *
+   * @param dirpath
+   * @return int
+   */
+  static int StaticDirSize(const std::string dirpath);
+  /**
+   * @brief
+   *
+   * @param dirpath
+   * @return std::vector<std::string>
+   */
   static std::vector<std::string> ListDirFiles(const std::string dirpath);
-  static void                     DeleteDir(const std::string dirpath);
+  /**
+   * @brief
+   *
+   * @param dirpath
+   */
+  static void DeleteDir(const std::string dirpath);
   DirectoryTool();
   ~DirectoryTool();
 };
@@ -58,51 +94,104 @@ class DirectoryTool {
 
 class EncodeDecodeTool {
  public:
+  /**
+   * @brief
+   *
+   * @param dst
+   * @param value
+   */
   static void EncodeFixed64(char* dst, uint64_t value) {
     uint8_t* const buffer = reinterpret_cast<uint8_t*>(dst);
     std::memcpy(buffer, &value, sizeof(uint64_t));
   }
-
+  /**
+   * @brief
+   *
+   * @param dst
+   * @param value
+   */
   static void PutFixed64(std::string* dst, uint64_t value) {
     char buf[sizeof(value)];
     EncodeFixed64(buf, value);
     dst->append(buf, sizeof(buf));
   }
 
+  /**
+   * @brief
+   *
+   * @param buffer
+   * @return uint64_t
+   */
   static uint64_t DecodeFixed64(const uint8_t* buffer) {
     uint64_t result;
     std::memcpy(&result, buffer, sizeof(uint64_t));
     return result;
   }
 
+  /**
+   * @brief
+   *
+   * @param dst
+   * @param value
+   */
   static void EncodeFixed16(char* dst, uint16_t value) {
     uint8_t* const buffer = reinterpret_cast<uint8_t*>(dst);
     std::memcpy(buffer, &value, sizeof(uint16_t));
   }
 
+  /**
+   * @brief
+   *
+   * @param dst
+   * @param value
+   */
   static void PutFixed16(std::string* dst, uint16_t value) {
     char buf[sizeof(value)];
     EncodeFixed16(buf, value);
     dst->append(buf, sizeof(buf));
   }
 
+  /**
+   * @brief
+   *
+   * @param buffer
+   * @return uint16_t
+   */
   static uint16_t DecodeFixed16(const uint8_t* buffer) {
     uint16_t result;
     std::memcpy(&result, buffer, sizeof(uint16_t));
     return result;
   }
 
+  /**
+   * @brief
+   *
+   * @param dst
+   * @param value
+   */
   static void EncodeFixed32(char* dst, uint32_t value) {
     uint8_t* const buffer = reinterpret_cast<uint8_t*>(dst);
     std::memcpy(buffer, &value, sizeof(uint32_t));
   }
 
+  /**
+   * @brief
+   *
+   * @param dst
+   * @param value
+   */
   static void PutFixed32(std::string* dst, uint32_t value) {
     char buf[sizeof(value)];
     EncodeFixed32(buf, value);
     dst->append(buf, sizeof(buf));
   }
 
+  /**
+   * @brief
+   *
+   * @param buffer
+   * @return uint32_t
+   */
   static uint32_t DecodeFixed32(const uint8_t* buffer) {
     uint32_t result;
     std::memcpy(&result, buffer, sizeof(uint32_t));
@@ -167,11 +256,26 @@ class StringUtil {
     return tmp_s;
   }
 
+  /**
+   * @brief
+   *
+   * @param str
+   * @param suffix
+   * @return true
+   * @return false
+   */
   static bool endsWith(const std::string& str, const std::string& suffix) {
     return str.size() >= suffix.size() &&
            0 == str.compare(str.size() - suffix.size(), suffix.size(), suffix);
   }
 
+  /**
+   * @brief
+   *
+   * @param str
+   * @param delim
+   * @return std::vector<std::string>
+   */
   static std::vector<std::string> Split(const std::string& str, char delim) {
     std::stringstream        ss(str);
     std::string              item;
@@ -187,5 +291,13 @@ class StringUtil {
 
 class HashUtil {
  public:
+  /**
+   * @brief
+   *
+   * @param crc
+   * @param s
+   * @param l
+   * @return uint64_t
+   */
   static uint64_t CRC64(uint64_t crc, const char* s, uint64_t l);
 };

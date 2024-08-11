@@ -118,6 +118,14 @@ class Storage {
   /**
    * @brief
    *
+   * @param key
+   * @return EStatus
+   */
+  virtual EStatus DelKV(std::string key) = 0;
+
+  /**
+   * @brief
+   *
    * @param prefix
    * @param offset
    * @param limit
@@ -144,15 +152,6 @@ class Storage {
    */
   virtual EStatus ProductSST(std::string snap_base_path,
                              std::string sst_file_path) = 0;
-
-  /**
-   * @brief
-   *
-   * @param key
-   * @return EStatus
-   */
-  virtual EStatus DelKV(std::string key) = 0;
-
 
   /**
    * @brief Create a Checkpoint

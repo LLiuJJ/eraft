@@ -50,6 +50,11 @@ class LogStore {
    */
   virtual ~LogStore() {}
 
+  /**
+   * @brief
+   *
+   * @return EStatus
+   */
   virtual EStatus Reinit() = 0;
 
   /**
@@ -146,8 +151,22 @@ class LogStore {
    */
   virtual eraftkv::Entry* GetLastEty() = 0;
 
+  /**
+   * @brief
+   *
+   * @param commit_idx
+   * @param applied_idx
+   * @return EStatus
+   */
   virtual EStatus PersisLogMetaState(int64_t commit_idx,
                                      int64_t applied_idx) = 0;
 
+  /**
+   * @brief
+   *
+   * @param commit_idx
+   * @param applied_idx
+   * @return EStatus
+   */
   virtual EStatus ReadMetaState(int64_t* commit_idx, int64_t* applied_idx) = 0;
 };

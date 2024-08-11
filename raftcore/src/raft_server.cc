@@ -43,9 +43,12 @@
 #include "eraft/util.h"
 
 /**
- * @brief Construct a new Raft Server object
+ * @brief construct a new raftserver
  *
  * @param raft_config
+ * @param log_store
+ * @param store
+ * @param net
  */
 RaftServer::RaftServer(RaftConfig raft_config,
                        LogStore*  log_store,
@@ -92,12 +95,21 @@ RaftServer::RaftServer(RaftConfig raft_config,
   }
 }
 
+/**
+ * @brief destroy the raftserver
+ *
+ */
 RaftServer::~RaftServer() {
   delete this->log_store_;
   delete this->net_;
   delete this->store_;
 }
 
+/**
+ * @brief
+ *
+ * @return EStatus
+ */
 EStatus RaftServer::ResetRandomElectionTimeout() {
   // make rand election timeout in (election_timeout, 2 * election_timout)
   auto rand_tick =
@@ -107,6 +119,15 @@ EStatus RaftServer::ResetRandomElectionTimeout() {
   return EStatus::kOk;
 }
 
+/**
+ * @brief
+ *
+ * @param raft_config
+ * @param log_store
+ * @param store
+ * @param net
+ * @return RaftServer*
+ */
 RaftServer* RaftServer::RunMainLoop(RaftConfig raft_config,
                                     LogStore*  log_store,
                                     Storage*   store,
@@ -119,7 +140,10 @@ RaftServer* RaftServer::RunMainLoop(RaftConfig raft_config,
   return svr;
 }
 
-
+/**
+ * @brief
+ *
+ */
 void RaftServer::RunApply() {
   while (true) {
     if (open_auto_apply_) {
@@ -443,6 +467,14 @@ EStatus RaftServer::ApplyEntries() {
   return EStatus::kOk;
 }
 
+/**
+ * @brief
+ *
+ * @param last_idx
+ * @param term
+ * @return true
+ * @return false
+ */
 bool RaftServer::IsUpToDate(int64_t last_idx, int64_t term) {
   return last_idx >= this->log_store_->LastIndex() &&
          term >= this->log_store_->GetLastEty()->term();
@@ -575,6 +607,15 @@ EStatus RaftServer::HandleRequestVoteResp(RaftNode* from_node,
   return EStatus::kOk;
 }
 
+/**
+ * @brief
+ *
+ * @param payload
+ * @param new_log_index
+ * @param new_log_term
+ * @param is_success
+ * @return EStatus
+ */
 EStatus RaftServer::Propose(std::string payload,
                             int64_t*    new_log_index,
                             int64_t*    new_log_term,
@@ -826,7 +867,11 @@ bool RaftServer::MatchLog(int64_t term, int64_t index) {
           this->log_store_->Get(index)->term() == term);
 }
 
-
+/**
+ * @brief
+ *
+ * @return EStatus
+ */
 EStatus RaftServer::AdvanceCommitIndexForLeader() {
   std::vector<int64_t> match_idxs;
   for (auto node : this->nodes_) {
@@ -847,6 +892,12 @@ EStatus RaftServer::AdvanceCommitIndexForLeader() {
   return EStatus::kOk;
 }
 
+/**
+ * @brief
+ *
+ * @param leader_commit
+ * @return EStatus
+ */
 EStatus RaftServer::AdvanceCommitIndexForFollower(int64_t leader_commit) {
 
   int64_t new_commit_index =
@@ -1119,10 +1170,22 @@ int64_t RaftServer::GetLeaderId() {
   return leader_id_;
 }
 
+/**
+ * @brief
+ *
+ * @return true
+ * @return false
+ */
 bool RaftServer::IsLeader() {
   return leader_id_ == id_;
 }
 
+/**
+ * @brief
+ *
+ * @return true
+ * @return false
+ */
 bool RaftServer::IsSnapshoting() {
   return is_snapshoting_;
 }

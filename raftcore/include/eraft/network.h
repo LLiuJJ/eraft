@@ -107,35 +107,3 @@ class Network {
   virtual EStatus InsertPeerNodeConnection(int64_t     peer_id,
                                            std::string addr) = 0;
 };
-
-/**
- * @brief
- *
- */
-class Event {
- public:
-  /**
-   * @brief Destroy the Event object
-   *
-   */
-  virtual ~Event() {}
-
-  /**
-   * @brief
-   *
-   * @param raft
-   * @param state
-   */
-  virtual void RaftStateChangeEvent(RaftServer* raft, int state) = 0;
-
-  /**
-   * @brief
-   *
-   * @param raft
-   * @param node
-   * @param ety
-   */
-  virtual void RaftGroupMembershipChangeEvent(RaftServer*     raft,
-                                              RaftNode*       node,
-                                              eraftkv::Entry* ety) = 0;
-};
