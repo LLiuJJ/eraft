@@ -32,3 +32,6 @@ jobs:
         mkdir build && cd build
         cmake ..
         make -j4
+    - name: Run Tests
+      run: |
+        sudo sh scripts/run-ci-tests.sh
