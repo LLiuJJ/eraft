@@ -56,4 +56,4 @@ FROM eraft/eraftkv:v0.0.6
 
 # RUN cd /grpc/third_party/protobuf && ./autogen.sh && ./configure && make -j8 && make install
 
-RUN apt-get install curl -y
+RUN apt install libspdlog-dev -y
